@@ -1,0 +1,4 @@
+streamlit==0.82.0
+pandas==1.2.3
+pendulum==2.1.2
+shareplum==0.5.1
