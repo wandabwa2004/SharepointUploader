@@ -59,12 +59,12 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
 
     cmd_upload  = col1.selectbox("Upload files",("No","Yes"))
     if (cmd_upload == "Yes"):
-
              
         uploadedfiles = col1.file_uploader("Please select the files to be  uploaded", type=['xlsx'], accept_multiple_files=True)
         for file in uploadedfiles:
             if uploadedfiles is not None:
-                save_uploadedfile(file,col1)        
+                save_uploadedfile(file,col1) 
+                
 
         col2.header("Upload Details")
         upload_choice = col2.selectbox("Upload to Sharepoint?",("No","Yes"))
@@ -75,6 +75,7 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
             path, dirs, files = next(os.walk("Temp"))
             file_count = str(len(files))
             col2.info("Path to the formatted  sheets: -->"+file_count)
+            col2.info(path)
             col2.write(os.listdir(path))
             in_folder = path
                  
