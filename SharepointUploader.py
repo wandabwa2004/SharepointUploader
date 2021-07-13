@@ -78,13 +78,9 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
             
             col3.header("SharePoint Details")            
 
-            path, dirs, files = next(os.walk("./Temp"))
+            path, dirs, files = next(os.walk("/app/Temp"))
             file_count = str(len(files))
-            col2.info("Path to the formatted  sheets: -->"+file_count)
-#             col2.info(path)            
-            col2.write(Path(__file__).parent.resolve())
-            col2.write(Path().resolve())
-            col2.write(os.listdir(path='/app/Temp'))
+            col2.info("Path to the formatted  sheets: -->"+file_count)           
             
            
             in_folder = path
