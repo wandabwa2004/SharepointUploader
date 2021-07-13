@@ -41,7 +41,7 @@ def upload_files_to_sharepoint(shpt_folder, path, share_point, shrpnt_site, colu
     site = Site(str(shrpnt_site), version=Version.v365, authcookie=authcookie) #Sharepoint  365 
     folder = site.Folder(str(shpt_folder)+'/'+foldername) #Creates a new folder in the base folder path.
     
-    path = '/Temp'
+    path = '/app/Temp'
     extension = 'xlsx'
     os.chdir(path)
     files = glob.glob('*.{}'.format(extension))
