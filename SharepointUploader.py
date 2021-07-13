@@ -8,6 +8,9 @@ import os
 import pendulum 
 import streamlit  as st #Works with streamlit 0.82.0
 import time 
+import shutil
+from pathlib import Path
+
 
 #Sharepoint related packages 
 from shareplum import Site #Sharepoint  0.5.1
@@ -19,6 +22,16 @@ from shareplum.site import Version
 st.set_page_config(layout="wide")
 
 
+def remove_folder_contents(path):
+
+    shutil.rmtree(path)
+    os.makedirs(path)
+
+def save_uploadedfile(uploadedfile,column):
+        
+    with open(os.path.join("Temp",uploadedfile.name),"wb") as f:
+        f.write(uploadedfile.getbuffer())
+    return column.success("{} saved, ready for upload.".format(uploadedfile.name))
 
 def upload_files_to_sharepoint(shpt_folder, path, share_point, shrpnt_site, columnname, username_shrpt,password_shrpt,input_folder):
      
@@ -36,29 +49,36 @@ def upload_files_to_sharepoint(shpt_folder, path, share_point, shrpnt_site, colu
             folder.upload_file(fileContent, os.path.basename(file)) #Upload all files matchng the extension above.
         
         except  Exception:
-            columnname.error("Sorry, there was an issue uploading  the file(s). Please re-run the uploading  process.")
+            columnname.error("Sorry, there was an issue uploading  the file(s). Please re-run the upload  process.")
     columnname.info("All done! The files must all be here: -->"+str(shrpnt_site)+str(shpt_folder)+'/'+foldername) #Displays the full path to the final URL 
 
 
 with st.beta_expander("Upload to Sharepoint:",expanded=True):
     col1,col2,col3 = st.beta_columns(3)
     col1.header("Utilities")
-    upload_url = col1.text_input("Please Copy and Paste the folder path to the files to be uploaded")
-    if (upload_url == ""):
-        col1.warning("Sorry you cannot  leave  this  field empty. Please enter a valid path.")
-    else:
 
-        col2.header("File(s) Directory")
-        in_folder = upload_url       
-        todaysdate = pendulum.now()
-        foldername = todaysdate.strftime('%d-%m-%Y') #This format can be changed to fit any other. 
-        dir_list = os.listdir(in_folder)
-        col2.info("Files location: ---> "+str(in_folder))
-        col2.info("Number of files in folder: --->"+str(len(glob.glob(in_folder+"\\*.xlsx")))) #This  can be any other file format e.g. .CSV, .txt etc
+    cmd_upload  = col1.selectbox("Upload files",("No","Yes"))
+    if (cmd_upload == "Yes"):
 
+             
+        uploadedfiles = col1.file_uploader("Please select the files to be  uploaded", type=['xlsx'], accept_multiple_files=True)
+        for file in uploadedfiles:
+            if uploadedfiles is not None:
+                save_uploadedfile(file,col1)        
+
+        col2.header("Upload Details")
         upload_choice = col2.selectbox("Upload to Sharepoint?",("No","Yes"))
         if (upload_choice == "Yes"):
-            col3.header("SharePoint Details")
+            
+            col3.header("SharePoint Details")            
+
+            path, dirs, files = next(os.walk("Temp"))
+            file_count = str(len(files))
+            col2.info("Path to the formatted  sheets: -->"+file_count)
+            col2.write(os.listdir(path))
+            in_folder = path
+                 
+            
             username_shrpt = col3.text_input("Enter your  Sharepoint username. Should be  your  Sharepoint email address","")    
             if (username_shrpt ==""):
                 col3.warning("Sorry the username field is blank. Please enter valid Sharepoint email.")
@@ -83,14 +103,8 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
                               
                                 st.spinner("Starting  the upload in 5 seconds ...")
                                 time.sleep(5)
-                                try:
-                                    upload_files_to_sharepoint(doc_library, in_folder, sharepoint_url, sharepointsite, col3, username_shrpt,password_shrpt,in_folder)#Calls the function to upload the files
-                                except Exception:
-                                    col3.error("Sorry the upload  failed. Please re-run the  process.")
-                                    
-
-
-            
-
-
-
+                                todaysdate = pendulum.now()
+                                foldername = todaysdate.strftime('%d-%m-%Y') #This format can be changed to fit any other. 
+                                
+                                upload_files_to_sharepoint(doc_library, in_folder, sharepoint_url, sharepointsite, col3, username_shrpt,password_shrpt,in_folder)#Calls the function to upload the files
+                                remove_folder_contents(in_folder)
