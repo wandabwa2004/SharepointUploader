@@ -30,8 +30,11 @@ def remove_folder_contents(path):
 
 def save_uploadedfile(uploadedfile,column):
         
-    with open(os.path.join("./Temp",uploadedfile.name),"wb") as f:
-        f.write(uploadedfile.getbuffer())
+    try:
+        with open(os.path.join("/app/Temp",uploadedfile.name),"wb") as f:
+            f.write(uploadedfile.getbuffer())
+    except  Exception:
+       column.error("Sorry file was not  temporarily stored for  upload.Please re-run the process.")
     return column.success("{} saved, ready for upload.".format(uploadedfile.name))
 
 def upload_files_to_sharepoint(shpt_folder, path, share_point, shrpnt_site, columnname, username_shrpt,password_shrpt,input_folder):
