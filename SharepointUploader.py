@@ -30,7 +30,7 @@ def remove_folder_contents(path):
 
 def save_uploadedfile(uploadedfile,column):
         
-    with open(os.path.join("Temp",uploadedfile.name),"wb") as f:
+    with open(os.path.join(r"/app/Temp",uploadedfile.name),"wb") as f:
         f.write(uploadedfile.getbuffer())
     return column.success("{} saved, ready for upload.".format(uploadedfile.name))
 
@@ -73,7 +73,7 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
             
             col3.header("SharePoint Details")            
 
-            path, dirs, files = next(os.walk("Temp"))
+            path, dirs, files = next(os.walk(r"/app/Temp"))
             file_count = str(len(files))
             col2.info("Path to the formatted  sheets: -->"+file_count)
 #             col2.info(path)            
