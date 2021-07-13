@@ -38,28 +38,33 @@ def save_uploadedfile(uploadedfile,column):
     return column.success("{} saved, ready for upload.".format(uploadedfile.name))
 
 def upload_files_to_sharepoint(shpt_folder, path, share_point, shrpnt_site, columnname, username_shrpt,password_shrpt,input_folder):
-     
-   
-    authcookie = Office365(str(share_point), username=username_shrpt, password=password_shrpt).GetCookies() #Connection details to Office 365
-    site = Site(str(shrpnt_site), version=Version.v365, authcookie=authcookie) #Sharepoint  365 
-    folder = site.Folder(str(shpt_folder)+'/'+foldername) #Creates a new folder in the base folder path.
     
-    path = '/app/Temp'
-    extension = 'xlsx'
-    os.chdir(path)
-    files = glob.glob('*.{}'.format(extension))
-
-#     files = glob.glob(path+"/*.xlsx") #Can be changed to any file format e.g. .csv or  .txt
-    for file in files:
+    try:
+        authcookie = Office365(str(share_point), username=username_shrpt, password=password_shrpt).GetCookies() #Connection details to Office 365
+        site = Site(str(shrpnt_site), version=Version.v365, authcookie=authcookie) #Sharepoint  365 
         try:
+            folder = site.Folder(str(shpt_folder)+'/'+foldername) #Creates a new folder in the base folder path.
+    
+            path = '/app/Temp'
+            extension = 'xlsx'
+            os.chdir(path)
+            files = glob.glob('*.{}'.format(extension))
 
-            with open(file, mode='rb') as rowFile:
-                fileContent = rowFile.read()
-            folder.upload_file(fileContent, os.path.basename(file)) #Upload all files matchng the extension above.
-        
-        except  Exception:
-            columnname.error("Sorry, there was an issue uploading  the file(s). Please re-run the upload  process.")
-    columnname.info("All done! The files must all be here: -->"+str(shrpnt_site)+str(shpt_folder)+'/'+foldername) #Displays the full path to the final URL 
+            for file in files:
+                try:
+
+                    with open(file, mode='rb') as rowFile:
+                        fileContent = rowFile.read()
+                    folder.upload_file(fileContent, os.path.basename(file)) #Upload all files matchng the extension above.
+
+                except  Exception:
+                    columnname.error("Sorry, there was an error uploading  the file(s). Please re-run the upload  process.")
+            columnname.info("All done! The files must all be here: -->"+str(shrpnt_site)+str(shpt_folder)+'/'+foldername) #Displays the full path to the final URL 
+        except Exception:
+            columnname.error("Sorry, there was an error creating a folder in your  Sharepoint location. Please input a valid path.")
+    except Exception:
+        columnname.error("Sorry, your login details may NOT be  valid. A connection to your Sharepoint site was not  established. Please re-enter the correct details.")
+            
 
 
 with st.beta_expander("Upload to Sharepoint:",expanded=True):
