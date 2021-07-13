@@ -9,6 +9,7 @@ import pendulum
 import streamlit  as st #Works with streamlit 0.82.0
 import time 
 import shutil
+import pathlib
 from pathlib import Path
 
 
@@ -75,7 +76,8 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
             path, dirs, files = next(os.walk("Temp"))
             file_count = str(len(files))
             col2.info("Path to the formatted  sheets: -->"+file_count)
-            col2.info(path)
+#             col2.info(path)            
+            col2.write(Path(__file__).parent.resolve())
             col2.write(os.listdir(path))
             in_folder = path
                  
