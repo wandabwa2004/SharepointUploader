@@ -40,8 +40,13 @@ def upload_files_to_sharepoint(shpt_folder, path, share_point, shrpnt_site, colu
     authcookie = Office365(str(share_point), username=username_shrpt, password=password_shrpt).GetCookies() #Connection details to Office 365
     site = Site(str(shrpnt_site), version=Version.v365, authcookie=authcookie) #Sharepoint  365 
     folder = site.Folder(str(shpt_folder)+'/'+foldername) #Creates a new folder in the base folder path.
+    
+    path = '/Temp'
+    extension = 'xlsx'
+    os.chdir(path)
+    files = glob.glob('*.{}'.format(extension))
 
-    files = glob.glob(path+"\\*.xlsx") #Can be changed to any file format e.g. .csv or  .txt
+#     files = glob.glob(path+"/*.xlsx") #Can be changed to any file format e.g. .csv or  .txt
     for file in files:
         try:
 
@@ -73,13 +78,13 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
             
             col3.header("SharePoint Details")            
 
-            path, dirs, files = next(os.walk(r"./Temp"))
+            path, dirs, files = next(os.walk("./Temp"))
             file_count = str(len(files))
             col2.info("Path to the formatted  sheets: -->"+file_count)
 #             col2.info(path)            
             col2.write(Path(__file__).parent.resolve())
             col2.write(Path().resolve())
-            col2.write(os.listdir(path='.'))
+            col2.write(os.listdir(path='/Temp'))
             
            
             in_folder = path
