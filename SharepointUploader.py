@@ -84,7 +84,7 @@ with st.beta_expander("Upload to Sharepoint:",expanded=True):
 #             col2.info(path)            
             col2.write(Path(__file__).parent.resolve())
             col2.write(Path().resolve())
-            col2.write(os.listdir(path='/Temp'))
+            col2.write(os.listdir(path='/app/Temp'))
             
            
             in_folder = path
