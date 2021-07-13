@@ -11,7 +11,7 @@ The Sharepoint Uploader is a tool designed using Python and Streamlit to help yo
 * Upload of the files matching  the  specified extension (currently .xlsx) to the  new folder in the base URL. File format can be changed
 
 ## Notes on Usage
-* The app can be cloned and run locally using streamlit: `streamlit run SharepointUploader.py`. When doing this, ensure you have the required modules listed in the requirements file.
+* A deployed version of  the app can be found here https://sharepointuploader.herokuapp.com/. The app can also be cloned and run locally using streamlit: `streamlit run SharepointUploader.py`. When doing this, ensure you have the required modules listed in the requirements file.
 * Make sure  the account  details for  accessing  Sharepoint on your  domain are valid. Normally, the username  is your domain specific email and password. 
 
 ## Bugs, Enhancements and Comments
